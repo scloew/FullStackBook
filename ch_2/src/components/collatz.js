@@ -6,49 +6,40 @@ export default class Collatz extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      num: 1,
-      sequence: [],
-      textPlaceholder: ''
+      textPlaceholder: '',
+      sequence: []
     };
-
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onChangeText = this.onChangeText.bind(this);
-    this.calcSequence = this.calcSequence.bind(this);
   }
 
-  calcSequence() {
+  calcSequence = () => {
     let sequence = []
-    let temp = this.state.num;
-    while (temp != 1 && sequence.length < 1000) {
-      sequence.push(temp);
-      console.log(temp);
-      if (temp % 2) {
-        temp = 3 * temp + 1;
+    let val = parseInt(this.state.textPlaceholder, 10);
+    while (val != 1 && sequence.length < 1000) {
+      sequence.push(val);
+      console.log(val);
+      if (val % 2) {
+        val = 3 * val + 1;
       } else {
-        temp = temp / 2;
+        val /= 2;
       }
     }
-    if (sequence.length != 1000) {
+    if (sequence.length && sequence.length != 1000) {
       sequence.push(1)
     }
-    this.setState({
-      sequence
-    })
+    this.setState({ sequence });
   }
 
-  onChangeText(e) {
+  onChangeText = e => {
     this.setState({
       textPlaceholder: e.target.value
     })
   }
 
-  onSubmit(e) {
+  onSubmit = e => {
     e.preventDefault();
+
     if (!isNaN(this.state.textPlaceholder)) {
-      this.setState({
-        num: parseInt(this.state.textPlaceholder),
-        textPlaceholder: ''
-      }, this.calcSequence);
+      this.calcSequence();
     }
   }
 
@@ -77,7 +68,6 @@ export default class Collatz extends Component {
             <input type="text"
               className="form-control"
               value={this.state.textPlaceholder}
-              placeholder={this.state.textPlaceholder}
               onChange={this.onChangeText}
             />
           </div>
@@ -85,11 +75,9 @@ export default class Collatz extends Component {
             <input type="submit" value="Calculate Collatz Sequence" className="btn btn-primary" />
           </div>
         </form>
-        <ul>
-          {
-            this.state.sequence.map(num => (<li>{num}</li>))
-          }
-        </ul>
+        {
+          this.state.sequence.map(num => (<p>{num}</p>))
+        }
       </div>
 
     );
